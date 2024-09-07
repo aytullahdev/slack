@@ -29,3 +29,17 @@ export const create = mutation({
     return workspaceId;
   },
 });
+
+export const getById = query({
+  args: {
+    id: v.id("workspaces"),
+  },
+  handler: async (ctx, { id }) => {
+    const userId = await getAuthUserId(ctx);
+    if (!userId) {
+      throw new Error("Unauthorized");
+    }
+
+    return await ctx.db.get(id);
+  },
+});
