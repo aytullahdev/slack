@@ -12,6 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import React from "react";
 import { useAuthActions } from "@convex-dev/auth/react";
+import { TriangleAlert } from "lucide-react";
 
 type SignInCardProps = {
   setState: React.Dispatch<React.SetStateAction<"signIn" | "signUp">>;
@@ -21,13 +22,26 @@ const SignInCard = ({ setState }: SignInCardProps) => {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [pending, setPending] = React.useState(false);
-
+  const [error, setError] = React.useState("");
   const handleProviderSignIn = (value: "google" | "github") => {
     setPending(true);
     signIn(value).then(() => {
       setPending(false);
     });
   };
+
+  const passwordSignIn = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setPending(true);
+    signIn("password", { email, password, flow: "signIn" })
+      .catch(() => {
+        setError("Invalid email or password");
+      })
+      .finally(() => {
+        setPending(false);
+      });
+  };
+
   return (
     <Card className="w-full h-full p-8">
       <CardHeader className="px-0 pt-0">
@@ -35,10 +49,16 @@ const SignInCard = ({ setState }: SignInCardProps) => {
         <CardDescription>
           Use your credentials to login to your account
         </CardDescription>
+        {!!error && (
+          <div className="bg-destructive/15 p-3 rounded-md flex items-center gap-x-2 text-sm text-destructive mb-6">
+            <TriangleAlert className="size-4" />
+            <p className="">{error}</p>
+          </div>
+        )}
       </CardHeader>
 
       <CardContent className="space-y-5 px-0 pb-0">
-        <form className="space-y-2.5">
+        <form className="space-y-2.5" onSubmit={passwordSignIn}>
           <Input
             disabled={pending}
             value={email}
