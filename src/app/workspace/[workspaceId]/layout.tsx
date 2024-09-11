@@ -2,6 +2,12 @@
 import React from "react";
 import { Toolbar } from "./toolbar";
 import { SideBar } from "./sidebar";
+import {
+  ResizableHandle,
+  ResizablePanel,
+  ResizablePanelGroup,
+} from "@/components/ui/resizable";
+import { WorkspaceSideBar } from "./worspace-sidebar";
 
 const WorkSpaceLayout = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -9,7 +15,19 @@ const WorkSpaceLayout = ({ children }: { children: React.ReactNode }) => {
       <Toolbar />
       <div className="flex  h-[calc(100vh-40px)]">
         <SideBar />
-        <div>{children}</div>
+        <ResizablePanelGroup direction="horizontal" autoSaveId="rsworkspace">
+          <ResizablePanel
+            defaultSize={20}
+            minSize={11}
+            className="bg-[#5E2C5F]"
+          >
+            <WorkspaceSideBar />
+          </ResizablePanel>
+          <ResizableHandle withHandle />
+          <ResizablePanel minSize={20} defaultSize={20}>
+            {children}
+          </ResizablePanel>
+        </ResizablePanelGroup>
       </div>
     </div>
   );
