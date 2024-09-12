@@ -56,6 +56,13 @@ export const create = mutation({
       joinCode,
     });
 
+    // also create a channel for the workspace
+
+    await ctx.db.insert("channels", {
+      name: "general",
+      workspaceId,
+    });
+
     // create a member record for the user who created the workspace
     await ctx.db.insert("members", {
       userId,
