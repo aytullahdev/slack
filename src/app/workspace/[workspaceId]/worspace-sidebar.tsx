@@ -14,6 +14,8 @@ import { useGetChannels } from "@/features/channels/api/use-get-challes";
 import { WorkSpaceSection } from "./workspace-sections";
 import { useGetMembers } from "@/features/member/api/use-get-members";
 import { UserItem } from "./user-item";
+import { useCreateChannel } from "@/features/channels/api/use-create-channel";
+import { useCreateChannelModal } from "@/features/channels/store/use-create-channel";
 
 export const WorkspaceSideBar = () => {
   const workspaceId = useWorkspaceId();
@@ -30,6 +32,8 @@ export const WorkspaceSideBar = () => {
   const { data: members, isLoading: isMembersLoading } = useGetMembers({
     workspaceId,
   });
+
+  const { open } = useCreateChannelModal();
   if (isMemberLoading || isWorkSpaceLoading) {
     return (
       <div className="flex flex-col items-center justify-center h-full bg-[#5E2C5F] ">
@@ -56,7 +60,13 @@ export const WorkspaceSideBar = () => {
         <SideBarItem label="Thread" icon={MessageSquareText} id="thread" />
         <SideBarItem label="Drafts and Send" icon={SendHorizonal} id="drafts" />
       </div>
-      <WorkSpaceSection label="Channels" hint="New channels" onNew={() => {}}>
+      <WorkSpaceSection
+        label="Channels"
+        hint="New channels"
+        onNew={() => {
+          open();
+        }}
+      >
         <>
           {channels?.map((item) => (
             <SideBarItem
